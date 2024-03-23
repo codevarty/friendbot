@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
@@ -17,7 +18,7 @@ class ChatGPTConfig {
 
     companion object {
         // 상수 설정
-        const val OPENAI_API_URL: String = "https://api.openai.com"
+        const val OPENAI_API_URL: String = "https://api.openai.com/v1"
     }
 
     @Value("\${openapi.secret-key}") // YAML 파일에 있는 시크릿 키 매핑
@@ -32,7 +33,10 @@ class ChatGPTConfig {
     @Bean
     fun webClient(): WebClient =
         WebClient.builder().baseUrl(OPENAI_API_URL) // 기본 url 지정
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json") // 기본 Content type 지정
+            .defaultHeader(
+                HttpHeaders.CONTENT_TYPE,
+                "application/json"
+            ) // 기본 Content type 지정
             .clientConnector(ReactorClientHttpConnector(httpClient))
             .build()
 

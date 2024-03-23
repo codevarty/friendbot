@@ -1,9 +1,11 @@
 package project.friendbot.domain.gpt.controller
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import project.friendbot.domain.gpt.dto.CompletionRequestDto
+import project.friendbot.domain.gpt.dto.TranscriptionRequestDto
 import project.friendbot.domain.gpt.service.ChatGPTService
 
 // 주 생성자로 property를 정의
@@ -43,5 +45,13 @@ class ChatGPTController(val chatGPTService: ChatGPTService) {
         }
         val result = chatGPTService.prompt(completionRequestDto)
         return ResponseEntity(result, HttpStatus.OK)
+    }
+
+    /**
+     * [API] 음성을 텍스트로 변환
+     */
+    @PostMapping(value = ["/transcription"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun uploadSpeechFile(@ModelAttribute transcriptionRequestDto: TranscriptionRequestDto): String {
+        return chatGPTService.speechToText(transcriptionRequestDto)
     }
 }

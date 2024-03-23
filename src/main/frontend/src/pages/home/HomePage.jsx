@@ -11,7 +11,6 @@ const HomePage = () => {
     const [answer, setAnswer] = useState('');
     const [show, setShow] = useState(false);
 
-
     const sendMessage = () => {
         let data = {
             message: prompt,
@@ -21,6 +20,7 @@ const HomePage = () => {
             .then(response => {
                 if (response.status !== 200) {
                     throw Error("잘못된 응답입니다.")
+                    return
                 }
                 let message = response.data.choices[0].message.content
                 setAnswer(message)
