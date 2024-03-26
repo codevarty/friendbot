@@ -4,6 +4,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import {Fragment, useState} from "react";
 import axios from "axios";
 import {Alert} from "react-bootstrap";
+import AudioFileUpload from "../../component/audio/AudioFileUpload.jsx";
 
 
 const HomePage = () => {
@@ -52,6 +53,8 @@ const HomePage = () => {
                 />
                 <Button as="input" variant="secondary" size="sm" type="submit" value="제출" onClick={sendMessage}/>
             </InputGroup>
+            <hr/>
+            <AudioFileUpload/>
         </Fragment>
     );
 }
