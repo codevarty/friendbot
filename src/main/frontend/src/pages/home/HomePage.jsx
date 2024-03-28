@@ -1,10 +1,11 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import {Fragment, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import axios from "axios";
 import {Alert} from "react-bootstrap";
 import AudioFileUpload from "../../component/audio/AudioFileUpload.jsx";
+import {getSpeech} from "../../component/audio/TTS.js";
 
 
 const HomePage = () => {
@@ -12,9 +13,14 @@ const HomePage = () => {
     const [answer, setAnswer] = useState('');
     const [show, setShow] = useState(false);
 
+    // //음성 변환 목소리 preload
+    useEffect(() => {
+        window.speechSynthesis.getVoices(); // 딜레이를 줄이기 위해 사용
+    }, []);
+
     const sendMessage = () => {
         let data = {
-            message: prompt,
+            content: prompt,
         }
         // axios 를 통해 서버 컨트롤러와 통신을 한다.
         axios.post("http://localhost:8090/api/chatGpt/prompt", data)
@@ -24,6 +30,7 @@ const HomePage = () => {
                     return
                 }
                 let message = response.data.choices[0].message.content
+                getSpeech(message);
                 setAnswer(message)
                 setShow(true)
             })

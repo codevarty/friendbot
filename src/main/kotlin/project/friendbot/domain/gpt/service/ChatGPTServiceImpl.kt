@@ -2,8 +2,7 @@ package project.friendbot.domain.gpt.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
+import com.google.gson.Gson
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.FileSystemResource
@@ -11,17 +10,16 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
+import project.friendbot.domain.gpt.dto.ChatMessageRequest
 import project.friendbot.domain.gpt.dto.CompletionRequestDto
 import project.friendbot.domain.gpt.dto.TranscriptionRequestDto
 import project.friendbot.global.config.ChatGPTConfig
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
 
 
 @Service
-class ChatGPTServiceImpl(val chatGPTConfig: ChatGPTConfig) : ChatGPTService {
+class ChatGPTServiceImpl(val chatGPTConfig: ChatGPTConfig, val gson: Gson) : ChatGPTService {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     @Value("\${openapi.audio-model}")
@@ -29,6 +27,7 @@ class ChatGPTServiceImpl(val chatGPTConfig: ChatGPTConfig) : ChatGPTService {
 
     @Value("\${openapi.model}")
     lateinit var model: String
+
 
     /**
      * 사용 가능한 모델 리스트를 조회하는 비지니스 설계
@@ -70,26 +69,30 @@ class ChatGPTServiceImpl(val chatGPTConfig: ChatGPTConfig) : ChatGPTService {
 
         val mapper = ObjectMapper()
 
-        val arr = JsonArray()
+        val arr = arrayListOf<CompletionRequestDto>()
 
-        val message = JsonObject()
+        val system = CompletionRequestDto(
+            role = "system", // system Instruction
+            content = "You are an expert professor and explain questions accurately and comprehensibly."
+        )
+        arr.add(system)
+        arr.add(completionRequestDto)
 
-        message.addProperty("role", "user")
-        message.addProperty("content", completionRequestDto.message)
+        val requestBody = ChatMessageRequest(
+            model = model,
+            messages = arr,
+            temperature = 1,
+        )
 
-        arr.add(message)
+        val json = gson.toJson(requestBody)
 
-        val requestBody = JsonObject()
-
-        requestBody.addProperty("model", model)
-        requestBody.add("messages", arr)
-
+        log.info("prompt={}", json)
 
         val response = chatGPTConfig.webClient()
             .post()
             .uri("/chat/completions")
             .headers { headers -> headers.addAll(chatGPTConfig.httpHeaders()) }
-            .bodyValue(requestBody.toString())
+            .bodyValue(json)
             .retrieve()
             .bodyToMono(String::class.java)
 

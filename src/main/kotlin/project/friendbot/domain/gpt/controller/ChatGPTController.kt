@@ -1,5 +1,6 @@
 package project.friendbot.domain.gpt.controller
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -17,6 +18,8 @@ import io.netty.handler.codec.http.HttpResponse as HttpResponse1
 @RestController
 @RequestMapping("/api/chatGpt")
 class ChatGPTController(val chatGPTService: ChatGPTService) {
+
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     /**
      * ChatGPT 모델 리스트 조회
@@ -45,7 +48,7 @@ class ChatGPTController(val chatGPTService: ChatGPTService) {
     @PostMapping("/prompt")
     fun selectPrompt(@RequestBody completionRequestDto: CompletionRequestDto): ResponseEntity<Map<String, Any>> {
         // 잘못된 요청시 bad request 문을 보낸다.
-        if (completionRequestDto.message.trim() == "") {
+        if (completionRequestDto.content.trim() == "") {
             return ResponseEntity(null, HttpStatus.BAD_REQUEST)
         }
         val result = chatGPTService.prompt(completionRequestDto)
@@ -75,12 +78,16 @@ class ChatGPTController(val chatGPTService: ChatGPTService) {
 
         val textData = chatGPTService.speechToText(transcriptionRequestDto)
 
+        log.info("speak => text: {}", textData)
+
         // 음성 파일을 텍스트 파일로 변경할 때 오류
         if (textData.isEmpty() || textData.isBlank()) {
             throw CustomException(CustomExceptionCode.ERROR_CHANGE_TO_TEXT)
         }
 
-        val response = chatGPTService.prompt(CompletionRequestDto(textData))
+        val response = chatGPTService.prompt(CompletionRequestDto(content = textData))
+
+        log.info("GPT Response={}", response)
 
         return ResponseEntity(response, HttpStatus.OK)
     }
