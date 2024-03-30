@@ -2,12 +2,15 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {ReactMediaRecorder} from "react-media-recorder";
 import {getSpeech, pauseSpeech} from "./TTS";
+import AudioButton from "../button/AudioButton.jsx";
 
 const AudioFileUpload = () => {
     // 음성 인식후 텍스트 반환값
     const [text, setText] = useState('');
     // Blob -> Binary Large Object: 파일이나 블롭 형태의 이진 데이터
     const [audioBlob, setAudioBlob] = useState(null);
+
+    const [isToggle, setToggle] = useState(true);
 
     const [loading, setLoading] = useState(false);
 
@@ -16,8 +19,16 @@ const AudioFileUpload = () => {
         window.speechSynthesis.getVoices(); // 딜레이를 줄이기 위해 사용
     }, []);
 
+    useEffect(() => {
+        uploadAudio();
+    }, [audioBlob]);
+
     const handlePause = () => {
         getSpeech(pauseSpeech()); // TTS 음성 종료하기
+    }
+
+    const handleToggle = () => {
+        setToggle((current) => !current)
     }
 
     const uploadAudio = () => {
@@ -43,8 +54,6 @@ const AudioFileUpload = () => {
         <div>
             <h2>음성 녹음 및 다운로드</h2>
 
-            <button onClick={handlePause}>음성 종료하기</button>
-
             <ReactMediaRecorder
                 audio
                 onStop={(blobUrl, blob) => {
@@ -53,12 +62,14 @@ const AudioFileUpload = () => {
                 render={({status, startRecording, stopRecording, mediaBlobUrl}) => (
                     <div>
                         <p>{status}</p>
-                        <button onClick={startRecording}>Start Recording</button>
-                        <button onClick={() => {
-                            stopRecording();
-                            uploadAudio(); // TODO: 음성 버튼을 두번 눌러야 하는 문제 발생 useEffect 사용 고려
-                        }}>Stop and Upload
-                        </button>
+                        <AudioButton isToggle={isToggle} onClick={() => {
+                            handleToggle();
+                            if (isToggle) {
+                                startRecording();
+                            } else {
+                                stopRecording();
+                            }
+                        }}/>
                     </div>
                 )}/>
 

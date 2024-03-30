@@ -9,3 +9,4 @@ data class ChatMessageRequest(
     @SerializedName("max_tokens")
     val maxTokens: Int = 256,
 )
+
