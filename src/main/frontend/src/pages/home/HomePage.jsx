@@ -4,7 +4,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import {Fragment, useEffect, useState} from "react";
 import axios from "axios";
 import {Alert} from "react-bootstrap";
-import AudioFileUpload from "../../component/audio/AudioFileUpload.jsx";
+import Audio from "../../component/audio/Audio.jsx";
 import {getSpeech} from "../../component/audio/TTS.js";
 
 
@@ -18,6 +18,13 @@ const HomePage = () => {
         window.speechSynthesis.getVoices(); // 딜레이를 줄이기 위해 사용
     }, []);
 
+    useEffect(() => {
+        if (answer) {
+            setShow(true)
+        } else {
+            setShow(false)
+        }
+    }, [answer]);
     const sendMessage = () => {
         let data = {
             content: prompt,
@@ -31,7 +38,6 @@ const HomePage = () => {
                 let message = response.data.choices[0].message.content
                 getSpeech(message);
                 setAnswer(message)
-                setShow(true)
             })
             .catch(err => console.log(err))
     }
@@ -43,7 +49,10 @@ const HomePage = () => {
                 <Alert.Heading>GPT 응답</Alert.Heading>
                 <p>{answer}</p>
                 <div className="d-flex justify-content-end">
-                    <Button onClick={() => setShow(false)} variant="outline-success">
+                    <Button onClick={() => {
+                        setAnswer('');
+                        setShow(false)
+                    }} variant="outline-success">
                         Confirm
                     </Button>
                 </div>
@@ -60,7 +69,7 @@ const HomePage = () => {
                 <Button as="input" variant="secondary" size="sm" type="submit" value="제출" onClick={sendMessage}/>
             </InputGroup>
             <hr/>
-            <AudioFileUpload/>
+            <Audio setAnswer={setAnswer}/>
         </Fragment>
     );
 }

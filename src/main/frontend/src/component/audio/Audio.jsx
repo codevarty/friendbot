@@ -4,17 +4,15 @@ import {ReactMediaRecorder} from "react-media-recorder";
 import {getSpeech, pauseSpeech} from "./TTS";
 import AudioButton from "../button/AudioButton.jsx";
 
-const AudioFileUpload = () => {
+const Audio = ({setAnswer}) => {
     // 음성 인식후 텍스트 반환값
-    const [text, setText] = useState('');
     // Blob -> Binary Large Object: 파일이나 블롭 형태의 이진 데이터
     const [audioBlob, setAudioBlob] = useState(null);
 
-    const [isToggle, setToggle] = useState(true);
+    const [isToggle, setIsToggle] = useState(true);
 
-    const [loading, setLoading] = useState(false);
 
-    // //음성 변환 목소리 preload
+    //음성 변환 목소리 preload
     useEffect(() => {
         window.speechSynthesis.getVoices(); // 딜레이를 줄이기 위해 사용
     }, []);
@@ -28,11 +26,10 @@ const AudioFileUpload = () => {
     }
 
     const handleToggle = () => {
-        setToggle((current) => !current)
+        setIsToggle((current) => !current)
     }
 
     const uploadAudio = () => {
-        setLoading(true);
         if (audioBlob) {
             const formData = new FormData();
             formData.append("file", audioBlob, "audio-recording.wav");
@@ -40,11 +37,9 @@ const AudioFileUpload = () => {
             axios.post("http://localhost:8090/api/chatGpt/question", formData)
                 .then((resp) => {
                     const txt = resp.data.choices[0].message.content;
-                    setText(txt);
-                    setLoading(false);
+                    setAnswer(txt);
                     getSpeech(txt)
                 }).catch((error) => {
-                setLoading(false);
                 alert(error);
             })
         }
@@ -72,12 +67,8 @@ const AudioFileUpload = () => {
                         }}/>
                     </div>
                 )}/>
-
-            <hr/>
-            <h3>결과: {text}</h3>
-            {loading && <h3> 응답을 기다리고 있습니다.</h3>}
         </div>
     );
 }
 
-export default AudioFileUpload;
+export default Audio;
