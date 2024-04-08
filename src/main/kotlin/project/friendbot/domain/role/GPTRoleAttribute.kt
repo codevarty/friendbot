@@ -6,8 +6,8 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
 import org.springframework.util.FileCopyUtils
 import project.friendbot.domain.enums.GPTRoleType
-import project.friendbot.domain.gpt.dto.CompletionRequestDto
 import project.friendbot.domain.role.dto.Message
+import project.friendbot.global.completion.Completion
 import java.nio.charset.StandardCharsets
 
 @Component
@@ -27,19 +27,20 @@ class GPTRoleAttribute(@Autowired gson: Gson) {
         json = gson.fromJson(data, Message::class.java)
     }
 
-    fun selectRole(type: GPTRoleType): CompletionRequestDto {
+    fun selectRole(type: String): Completion {
         return when (type) {
-            GPTRoleType.SPEAKER -> toCompletionRequest(json.speaker.content ?: "")
+            GPTRoleType.SPEAKER.role -> toCompletionRequest(json.speaker.content ?: "")
 
-            GPTRoleType.TEACHER -> toCompletionRequest(json.teacher.content ?: "")
+            GPTRoleType.TEACHER.role -> toCompletionRequest(json.teacher.content ?: "")
 
-            GPTRoleType.COUNSELOR -> toCompletionRequest(json.counselor.content ?: "")
+            GPTRoleType.COUNSELOR.role -> toCompletionRequest(json.counselor.content ?: "")
 
-            GPTRoleType.FRIEND -> toCompletionRequest(json.friend.content ?: "")
+            GPTRoleType.FRIEND.role -> toCompletionRequest(json.friend.content ?: "")
 
-            else -> throw IllegalArgumentException("제공되지 않는 타입입니다. GPTRoleType: $type")
+            else -> throw IllegalArgumentException("Unknown role type $type")
+
         }
     }
 
-    private fun toCompletionRequest(data: String): CompletionRequestDto = CompletionRequestDto(ROLE, data)
+    private fun toCompletionRequest(data: String): Completion = Completion(ROLE, data)
 }

@@ -10,16 +10,20 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
+import project.friendbot.domain.enums.GPTRoleType
 import project.friendbot.domain.gpt.dto.ChatMessageRequest
 import project.friendbot.domain.gpt.dto.CompletionRequestDto
 import project.friendbot.domain.gpt.dto.TranscriptionRequestDto
+import project.friendbot.domain.role.GPTRoleAttribute
+import project.friendbot.global.completion.Completion
 import project.friendbot.global.config.ChatGPTConfig
 import java.io.File
 import java.nio.file.Files
 
 
 @Service
-class ChatGPTServiceImpl(val chatGPTConfig: ChatGPTConfig, val gson: Gson) : ChatGPTService {
+class ChatGPTServiceImpl(val chatGPTConfig: ChatGPTConfig, val gson: Gson, val attirbute: GPTRoleAttribute) :
+    ChatGPTService {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     @Value("\${openapi.audio-model}")
@@ -69,14 +73,12 @@ class ChatGPTServiceImpl(val chatGPTConfig: ChatGPTConfig, val gson: Gson) : Cha
 
         val mapper = ObjectMapper()
 
-        val arr = arrayListOf<CompletionRequestDto>()
+        val arr = arrayListOf<Completion>()
 
-        val system = CompletionRequestDto(
-            role = "system", // system Instruction
-            content = "You are an expert professor and explain questions accurately and comprehensibly."
-        )
+        val system = attirbute.selectRole(completionRequestDto.type)
+
         arr.add(system)
-        arr.add(completionRequestDto)
+        arr.add(completionRequestDto.toCompletion())
 
         val requestBody = ChatMessageRequest(
             model = model,

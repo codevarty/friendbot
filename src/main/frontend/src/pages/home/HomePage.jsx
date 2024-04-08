@@ -10,6 +10,7 @@ import {getSpeech} from "../../component/audio/TTS.js";
 
 const HomePage = () => {
     const [prompt, setPrompt] = useState('')
+    const [type, setType] = useState('speaker');
     const [answer, setAnswer] = useState('');
     const [show, setShow] = useState(false);
 
@@ -25,10 +26,18 @@ const HomePage = () => {
             setShow(false)
         }
     }, [answer]);
+
+    const handleSelectChange = (event) => {
+        console.log(event.target.value)
+        setType(event.target.value)
+    }
+
     const sendMessage = () => {
         let data = {
+            type: type,
             content: prompt,
         }
+        console.log("request data", data)
         // axios 를 통해 서버 컨트롤러와 통신을 한다.
         axios.post("http://localhost:8090/api/chatGpt/prompt", data)
             .then(response => {
@@ -66,6 +75,15 @@ const HomePage = () => {
                     value={prompt}
                     onChange={c => setPrompt(c.target.value)}
                 />
+                <Form.Select aria-label="Select Role"
+                             size="sm"
+                             style={{flex: 'none', width: '120px'}}
+                             onChange={handleSelectChange}
+                >
+                    <option value="speaker">영어 회화</option>
+                    <option value="teacher">진로 상담</option>
+                    <option value="counselor">심리 상담</option>
+                </Form.Select>
                 <Button as="input" variant="secondary" size="sm" type="submit" value="제출" onClick={sendMessage}/>
             </InputGroup>
             <hr/>

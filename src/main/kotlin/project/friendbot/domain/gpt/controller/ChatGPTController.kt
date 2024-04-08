@@ -7,12 +7,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import project.friendbot.domain.exception.CustomException
 import project.friendbot.domain.exception.CustomExceptionCode
-import project.friendbot.domain.exception.ErrorResponse
 import project.friendbot.domain.gpt.dto.CompletionRequestDto
 import project.friendbot.domain.gpt.dto.TranscriptionRequestDto
 import project.friendbot.domain.gpt.service.ChatGPTService
-import project.friendbot.global.controller.CustomErrorController
-import io.netty.handler.codec.http.HttpResponse as HttpResponse1
 
 // 주 생성자로 property를 정의
 @RestController
@@ -51,6 +48,7 @@ class ChatGPTController(val chatGPTService: ChatGPTService) {
         if (completionRequestDto.content.trim() == "") {
             return ResponseEntity(null, HttpStatus.BAD_REQUEST)
         }
+        log.info("request={}", completionRequestDto)
         val result = chatGPTService.prompt(completionRequestDto)
         return ResponseEntity(result, HttpStatus.OK)
     }
@@ -76,6 +74,7 @@ class ChatGPTController(val chatGPTService: ChatGPTService) {
             throw CustomException(CustomExceptionCode.BAD_FORMAT_FILE)
         }
 
+        val type = transcriptionRequestDto.type
         val textData = chatGPTService.speechToText(transcriptionRequestDto)
 
         log.info("speak => text: {}", textData)
@@ -85,7 +84,12 @@ class ChatGPTController(val chatGPTService: ChatGPTService) {
             throw CustomException(CustomExceptionCode.ERROR_CHANGE_TO_TEXT)
         }
 
-        val response = chatGPTService.prompt(CompletionRequestDto(content = textData))
+        val response = chatGPTService.prompt(
+            CompletionRequestDto(
+                type = type,
+                content = textData
+            )
+        )
 
         log.info("GPT Response={}", response)
 
