@@ -1,0 +1,11 @@
+section {
+    width: 300px;
+    /*height: auto;*/
+
+    background: #5E9EEA;
+    border-radius: 10px;
+
+    margin: 10px 0;
+
+    border: 2px solid rgba(103, 103, 103, 0.6);
+}

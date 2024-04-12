@@ -29,18 +29,18 @@ class GPTRoleAttribute(@Autowired gson: Gson) {
 
     fun selectRole(type: String): Completion {
         return when (type) {
-            GPTRoleType.SPEAKER.role -> toCompletionRequest(json.speaker.content ?: "")
+            GPTRoleType.SPEAKER.role -> toCompletion(json.speaker.content ?: "")
 
-            GPTRoleType.TEACHER.role -> toCompletionRequest(json.teacher.content ?: "")
+            GPTRoleType.TEACHER.role -> toCompletion(json.teacher.content ?: "")
 
-            GPTRoleType.COUNSELOR.role -> toCompletionRequest(json.counselor.content ?: "")
+            GPTRoleType.COUNSELOR.role -> toCompletion(json.counselor.content ?: "")
 
-            GPTRoleType.FRIEND.role -> toCompletionRequest(json.friend.content ?: "")
+            GPTRoleType.FRIEND.role -> toCompletion(json.friend.content ?: "")
 
             else -> throw IllegalArgumentException("Unknown role type $type")
 
         }
     }
 
-    private fun toCompletionRequest(data: String): Completion = Completion(ROLE, data)
+    private fun toCompletion(data: String): Completion = Completion(ROLE, data)
 }
