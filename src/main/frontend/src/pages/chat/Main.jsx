@@ -2,11 +2,13 @@ import {useEffect, useState} from "react";
 import classes from "../../style/chat/Main.module.css";
 import SearchBar from "../../component/chat/SearchBar.jsx";
 import axios from "axios";
+import ChatHeader from "./ChatHeader.jsx";
+import MessageContainer from "./MessageContainer.jsx";
 
 const Main = () => {
 
     const [prompt, setPrompt] = useState('');
-    // const [type, setType] = useState('speaker');
+    const [type, setType] = useState('speaker');
     // const [answer, setAnswer] = useState('');
     // const [show, setShow] = useState(false);
 
@@ -48,6 +50,8 @@ const Main = () => {
     }
     return (
         <div className={classes.root}>
+            <ChatHeader setType={setType}/>
+            <MessageContainer/>
             {/*<Form.Select aria-label="Select Role"*/}
             {/*             size="sm"*/}
             {/*             style={{flex: 'none', width: '120px'}}*/}

@@ -4,10 +4,11 @@ import {MdKeyboardVoice} from "react-icons/md";
 import {FaRegFaceSmile} from "react-icons/fa6";
 import {AiOutlineSend} from "react-icons/ai";
 
+// eslint-disable-next-line react/prop-types
 const SearchBarButtons = ({onClick}) => {
 
     return (
-        <ButtonGroup size="lg">
+        <ButtonGroup size="lg" style={{background: '#fff'}}>
             <Button variant="none">
                 <MdKeyboardVoice/>
             </Button>

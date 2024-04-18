@@ -3,11 +3,13 @@ import Form from "react-bootstrap/Form";
 import classes from "../../style/chat/SearchBar.module.css";
 import SearchBarButtons from "./button/SearchBarButtons.jsx";
 
+
+// eslint-disable-next-line react/prop-types
 const SearchBar = ({prompt, setPrompt, onClick}) => {
     const inputClassName = classes.searchBar + ' mb3';
 
     return (
-        <div className={classes.container + ' montserrat'}>
+        <div className={classes.container}>
             <InputGroup className={inputClassName}>
                 <Form.Control
                     placeholder="Type a new message here"

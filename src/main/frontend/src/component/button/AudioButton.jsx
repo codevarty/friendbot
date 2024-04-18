@@ -1,8 +1,8 @@
-import React from "react";
-import "../../style/button.css"
+import "../../style/button/button.css"
 import microphone from "../../assets/microphone.png"
 import audioStop from '../../assets/stop-media.png';
 
+// eslint-disable-next-line react/prop-types
 const AudioButton = ({isToggle, onClick}) => {
 
     const imgSrc = isToggle ? microphone : audioStop;

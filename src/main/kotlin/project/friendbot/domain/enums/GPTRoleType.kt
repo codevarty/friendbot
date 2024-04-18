@@ -4,7 +4,7 @@ enum class GPTRoleType(
     val role: String
 ) {
     SPEAKER("speaker"),
-    TEACHER("teacher"),
     COUNSELOR("counselor"),
+    TEACHER("teacher"),
     FRIEND("friend")
 }
