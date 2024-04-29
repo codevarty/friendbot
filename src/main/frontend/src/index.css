@@ -2,6 +2,7 @@
     --theme-background-night: #212426;
     --theme-background-light: #ffff;
     --theme-color: #000;
+    --theme-color-night: #ffff;
 }
 
 * {
@@ -15,11 +16,21 @@ body {
     margin: 0;
     display: flex;
     background: var(--theme-background-light);
+    color: var(--theme-color);
     place-items: center;
     min-width: 320px;
     min-height: 100vh;
+    transition: .3s ease-in all;
 }
 
 body.night {
     background: var(--theme-background-night);
+    color: var(--theme-color-night);
 }
+
+body.night select {
+    background: var(--theme-background-night);
+    color: var(--theme-color-night);
+}
+
+/* input 부분은 나중에 생각할 수 있도록 한다. */

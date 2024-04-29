@@ -11,3 +11,14 @@
 }
 
 
+/* focus 인라인 효과 없애기  */
+.searchBar > input:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.searchBar > input {
+    border: none;
+}
+

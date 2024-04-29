@@ -1,7 +1,11 @@
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 import classes from "../../style/chat/SearchBar.module.css";
-import SearchBarButtons from "./button/SearchBarButtons.jsx";
+import {ButtonGroup} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import {MdKeyboardVoice} from "react-icons/md";
+import {FaRegFaceSmile} from "react-icons/fa6";
+import {AiOutlineSend} from "react-icons/ai";
 
 
 // eslint-disable-next-line react/prop-types
@@ -18,7 +22,17 @@ const SearchBar = ({prompt, setPrompt, onClick}) => {
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                 />
-                <SearchBarButtons onClick={onClick}/>
+                <ButtonGroup size="lg" style={{background: '#fff'}}>
+                    <Button variant="none">
+                        <MdKeyboardVoice/>
+                    </Button>
+                    <Button variant="none">
+                        <FaRegFaceSmile/>
+                    </Button>
+                    <Button variant="none" type="submit" onClick={onClick}>
+                        <AiOutlineSend/>
+                    </Button>
+                </ButtonGroup>
             </InputGroup>
         </div>
     );

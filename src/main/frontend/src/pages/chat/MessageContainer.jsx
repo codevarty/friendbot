@@ -1,7 +1,9 @@
+import classes from '../../style/chat/messageContainer.module.css';
+
 const MessageContainer = () => {
 
     return (
-        <div>
+        <div className={classes.container}>
             Message Container
         </div>
     )

@@ -32,7 +32,7 @@ const Main = () => {
 
     const sendMessage = () => {
         let data = {
-            // type: type,
+            type: type,
             content: prompt,
         }
         console.log("request data", data)
@@ -43,24 +43,18 @@ const Main = () => {
                 if (response.status !== 200) {
                     throw Error("잘못된 응답입니다.")
                 }
-                let message = response.data.choices[0].message.content
+                // let message = response.data.choices[0].message.content
                 // getSpeech(message);
             })
             .catch(err => console.log(err))
     }
     return (
         <div className={classes.root}>
+            {/* 헤더 부분 */}
             <ChatHeader setType={setType}/>
+            {/* 사용자 질문 및 GPT 응답 부분 */}
             <MessageContainer/>
-            {/*<Form.Select aria-label="Select Role"*/}
-            {/*             size="sm"*/}
-            {/*             style={{flex: 'none', width: '120px'}}*/}
-            {/*             onChange={handleSelectChange}*/}
-            {/*>*/}
-            {/*    <option value="speaker">영어 회화</option>*/}
-            {/*    <option value="teacher">진로 상담</option>*/}
-            {/*    <option value="counselor">심리 상담</option>*/}
-            {/*</Form.Select>*/}
+            {/* 사용자 프롬프트 입력 부분 */}
             <SearchBar prompt={prompt}
                        setPrompt={setPrompt}
                        onClick={sendMessage}/>
