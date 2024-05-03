@@ -9,28 +9,18 @@ const Main = () => {
 
     const [prompt, setPrompt] = useState('');
     const [type, setType] = useState('speaker');
-    // const [answer, setAnswer] = useState('');
-    // const [show, setShow] = useState(false);
+    const [chat, setChat] = useState([]);
 
     // //음성 변환 목소리 preload
     useEffect(() => {
         window.speechSynthesis.getVoices(); // 딜레이를 줄이기 위해 사용
     }, []);
 
-    // useEffect(() => {
-    //     if (answer) {
-    //         setShow(true)
-    //     } else {
-    //         setShow(false)
-    //     }
-    // }, [answer]);
+    const sendMessage = () => {// 프롬프트 초기화
 
-    // const handleSelectChange = (event) => {
-    //     console.log(event.target.value)
-    //     setType(event.target.value)
-    // }
+        setChat(current => [...current, {type: "user", content: prompt}])
+        setPrompt(''); // 입력값 초기화
 
-    const sendMessage = () => {
         let data = {
             type: type,
             content: prompt,
@@ -43,7 +33,9 @@ const Main = () => {
                 if (response.status !== 200) {
                     throw Error("잘못된 응답입니다.")
                 }
-                // let message = response.data.choices[0].message.content
+                let message = response.data.choices[0].message.content // GPT 응답 내용
+                setChat(current => [...current, {type: "bot", content: message}])
+                console.log(message);
                 // getSpeech(message);
             })
             .catch(err => console.log(err))
@@ -53,7 +45,7 @@ const Main = () => {
             {/* 헤더 부분 */}
             <ChatHeader setType={setType}/>
             {/* 사용자 질문 및 GPT 응답 부분 */}
-            <MessageContainer/>
+            <MessageContainer chatList={chat}/>
             {/* 사용자 프롬프트 입력 부분 */}
             <SearchBar prompt={prompt}
                        setPrompt={setPrompt}
