@@ -6,6 +6,8 @@ plugins {
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.spring") version "1.9.23"
     kotlin("plugin.jpa") version "1.9.23"
+    kotlin("plugin.noarg") version "1.9.23"
+    kotlin("plugin.allopen") version "1.9.23"
 }
 
 group = "project"
@@ -25,15 +27,26 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    // h2 database
-    runtimeOnly("com.h2database:h2")
+    // mysql 드라이버
+    runtimeOnly("com.mysql:mysql-connector-j")
+
     // WenClient
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 
     // Gson(google)
-    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.google.code.gson:gson:2.8.9")
+}
+
+// spring boot plugin 외에 open 추가
+allOpen {
+    annotation("jakarta.persistence.Entity")
+}
+
+// 매개변수가 없는 생성자를 자동으로 추가해줌
+noArg {
+    annotation("jakarta.persistence.Entity")
 }
 
 tasks.withType<KotlinCompile> {

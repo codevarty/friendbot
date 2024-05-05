@@ -4,6 +4,7 @@ spring:
   profiles:
     include:
       - openapi
+      - mysql
   web:
     resources:
       static-locations: classpath:/static/,classpath:/public/,classpath:/resources/,classpath:/META-INF/resources/,file:src/main/frontend/dist/
