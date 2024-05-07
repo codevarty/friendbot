@@ -24,6 +24,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
@@ -34,6 +35,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+
 
     // Gson(google)
     implementation("com.google.code.gson:gson:2.8.9")
