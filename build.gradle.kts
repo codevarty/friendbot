@@ -36,6 +36,11 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson")
+
 
     // Gson(google)
     implementation("com.google.code.gson:gson:2.8.9")

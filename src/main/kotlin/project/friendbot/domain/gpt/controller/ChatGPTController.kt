@@ -28,7 +28,7 @@ class ChatGPTController(val chatGPTService: ChatGPTService) {
     }
 
     /**
-     *  ChatGPT 유요한 모델인지 조회
+     *  ChatGPT 유효한 모델인지 조회
      *
      * @param modelName
      * @return

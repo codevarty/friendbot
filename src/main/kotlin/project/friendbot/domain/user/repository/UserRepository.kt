@@ -4,8 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 import project.friendbot.domain.user.entity.User
 import java.util.*
 
-interface UserRepository : JpaRepository<User, String> {
+interface UserRepository : JpaRepository<User, Long> {
     override fun findAll(): List<User>
-    override fun findById(id: String): Optional<User>
+    override fun findById(id: Long): Optional<User>
     fun findByEmail(email: String): Optional<User>
 }

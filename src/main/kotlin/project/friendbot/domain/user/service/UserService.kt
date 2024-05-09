@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import project.friendbot.domain.user.dto.SignUpUserRequest
+import project.friendbot.domain.user.dto.UpdateUserInfoRequest
 import project.friendbot.domain.user.dto.UserResponse
 import project.friendbot.domain.user.entity.User
 import project.friendbot.domain.user.repository.UserRepository
@@ -15,13 +16,33 @@ class UserService(
 ) {
 
     @Transactional
-    fun join(signUpUserRequest: SignUpUserRequest): UserResponse {
+    fun createUser(signUpUserRequest: SignUpUserRequest): Long {
         // 비밀번호 암호화
         val password = passwordEncoder.encode(signUpUserRequest.password)
-        val user = User(signUpUserRequest.email, signUpUserRequest.username, password)
+        val user = User(signUpUserRequest.email, signUpUserRequest.username, password, signUpUserRequest.birthdate)
 
         userRepository.save(user)
 
-        return UserResponse(user.name, user.email)
+        return user.id!!
+    }
+
+    @Transactional
+    fun updateUserInfo(email: String, updateUserInfoRequest: UpdateUserInfoRequest): UserResponse {
+        val findUser = userRepository.findByEmail(email)
+            .orElseThrow { Error("사용자를 찾을 수 없습니다.") }
+
+        findUser.updateUserInfo(updateUserInfoRequest.username, updateUserInfoRequest.birthdate)
+
+        userRepository.save(findUser)
+
+        return UserResponse(findUser.name, findUser.email, findUser.birthdate)
+    }
+
+    @Transactional
+    fun deleteUser(id: Long) {
+        val findUser = userRepository.findById(id)
+            .orElseThrow { Error("사용자를 찾을 수 없습니다.") }
+
+        userRepository.delete(findUser)
     }
 }

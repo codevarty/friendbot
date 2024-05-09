@@ -10,7 +10,8 @@ class User(
     @Column(length = 50, unique = true, nullable = false)
     val email: String,
     name: String,
-    password: String
+    password: String,
+    birthdate: LocalDateTime,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +28,19 @@ class User(
     var password: String = password
         protected set
 
+    @Column(nullable = false)
+    var birthdate: LocalDateTime = birthdate
+        protected set
+
     val createdAt: LocalDateTime = LocalDateTime.now()
 
     fun updateToken(token: String) {
         this.refreshToken = token
     }
 
-    fun updateName(name: String) {
+    fun updateUserInfo(name: String, birthdate: LocalDateTime) {
         this.name = name
+        this.birthdate = birthdate
     }
 
     fun updatePassword(password: String) {
