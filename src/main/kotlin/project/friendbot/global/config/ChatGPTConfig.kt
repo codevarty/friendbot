@@ -62,7 +62,4 @@ class ChatGPTConfig {
         headers.set("Authorization", "Bearer $secretKey")
         return headers
     }
-
-    @Bean
-    fun passwordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
 }

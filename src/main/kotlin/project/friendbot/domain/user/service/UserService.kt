@@ -17,6 +17,9 @@ class UserService(
 
     @Transactional
     fun createUser(signUpUserRequest: SignUpUserRequest): Long {
+        if (userRepository.findByEmail(signUpUserRequest.email).isPresent) {
+            throw Error("이메일이 중복되었습니다.")
+        }
         // 비밀번호 암호화
         val password = passwordEncoder.encode(signUpUserRequest.password)
         val user = User(signUpUserRequest.email, signUpUserRequest.username, password, signUpUserRequest.birthdate)

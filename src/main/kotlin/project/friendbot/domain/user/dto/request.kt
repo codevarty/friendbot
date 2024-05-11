@@ -1,5 +1,6 @@
 package project.friendbot.domain.user.dto
 
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 
 // 회원 가입 request
@@ -7,6 +8,7 @@ data class SignUpUserRequest(
     val username: String,
     val password: String,
     val email: String,
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     val birthdate: LocalDateTime,
 )
 

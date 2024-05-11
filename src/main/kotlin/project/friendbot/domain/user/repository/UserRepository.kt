@@ -8,4 +8,5 @@ interface UserRepository : JpaRepository<User, Long> {
     override fun findAll(): List<User>
     override fun findById(id: Long): Optional<User>
     fun findByEmail(email: String): Optional<User>
+    fun findByRefreshToken(token: String): Optional<User>
 }
