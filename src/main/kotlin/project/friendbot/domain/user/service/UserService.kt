@@ -41,6 +41,9 @@ class UserService(
         return UserResponse(findUser.name, findUser.email, findUser.birthdate)
     }
 
+    fun findByEmail(email: String): User = userRepository.findByEmail(email)
+        .orElseThrow { Error("사용자를 찾을 수 없습니다.") }
+
     @Transactional
     fun deleteUser(id: Long) {
         val findUser = userRepository.findById(id)

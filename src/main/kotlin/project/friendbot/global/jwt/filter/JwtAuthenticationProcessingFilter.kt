@@ -50,7 +50,7 @@ class JwtAuthenticationProcessingFilter(
         checkAccessTokenAndAuthentication(request, response, filterChain)
     }
 
-    fun checkRefreshTokenAndReIssueAccessToken(response: HttpServletResponse, refreshToken: String) {
+    private fun checkRefreshTokenAndReIssueAccessToken(response: HttpServletResponse, refreshToken: String) {
         userRepository.findByRefreshToken(refreshToken)
             .ifPresent { user ->
                 run {
@@ -65,7 +65,7 @@ class JwtAuthenticationProcessingFilter(
     }
 
     private fun reIssueRefreshToken(user: User): String {
-        val generateRefreshToken = jwtService.generateRefreshToken(user.email)
+        val generateRefreshToken = jwtService.generateRefreshToken()
         user.updateToken(generateRefreshToken)
         userRepository.save(user)
         return generateRefreshToken
@@ -88,7 +88,7 @@ class JwtAuthenticationProcessingFilter(
         filterChain.doFilter(request, response)
     }
 
-    fun saveAuthentication(user: User) {
+    private fun saveAuthentication(user: User) {
         val customUserDetails = customUserDetailService.loadUserByUsername(user.email)
         val authentication = UsernamePasswordAuthenticationToken(
             customUserDetails,

@@ -16,6 +16,8 @@ import project.friendbot.domain.user.repository.UserRepository
 import project.friendbot.global.jwt.filter.JwtAuthenticationProcessingFilter
 import project.friendbot.global.jwt.service.JwtService
 import project.friendbot.global.jwt.user.filter.CustomJsonLoginFilter
+import project.friendbot.global.jwt.user.handler.LoginFailureHandler
+import project.friendbot.global.jwt.user.handler.LoginSuccessHandler
 import project.friendbot.global.jwt.user.service.CustomUserDetailService
 
 @Configuration
@@ -24,8 +26,11 @@ class SecurityConfig(
     private val jwtService: JwtService,
     private val userRepository: UserRepository,
     private val customUserDetailService: CustomUserDetailService,
-    private val objectMapper: ObjectMapper
-) {
+    private val objectMapper: ObjectMapper,
+    private val loginSuccessHandler: LoginSuccessHandler,
+    private val loginFailureHandler: LoginFailureHandler,
+
+    ) {
 
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
@@ -44,6 +49,8 @@ class SecurityConfig(
     fun customJsonLoginFilter(): CustomJsonLoginFilter {
         val customJsonLoginFilter = CustomJsonLoginFilter(objectMapper)
         customJsonLoginFilter.setAuthenticationManager(authenticationManager())
+        customJsonLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler)
+        customJsonLoginFilter.setAuthenticationFailureHandler(loginFailureHandler)
         return customJsonLoginFilter
 
     }
@@ -63,7 +70,7 @@ class SecurityConfig(
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(*allowPatterns).permitAll()
-                    .anyRequest().permitAll() // 테스트를 위해 모두 허용
+                    .anyRequest().authenticated()// 테스트를 위해 모두 허용
             }
 
         // 세션을 사용하지 않으므로 STATELESS 설정

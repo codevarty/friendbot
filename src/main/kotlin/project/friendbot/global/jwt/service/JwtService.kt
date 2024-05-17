@@ -69,7 +69,7 @@ class JwtService(private val userRepository: UserRepository) {
     /**
      *  Refresh Token 생성 메소드
      */
-    fun generateRefreshToken(email: String): String {
+    fun generateRefreshToken(): String {
         val now = Date()
         return Jwts.builder()
             .subject(REFRESH_TOKEN_SUBJECT)

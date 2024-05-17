@@ -30,7 +30,6 @@ class CustomJsonLoginFilter(private val objectMapper: ObjectMapper) :
             throw AuthenticationServiceException("Authentication Content-Type not supported: " + request.contentType)
         }
 
-        println("???")
         val messageBody = StreamUtils.copyToString(request.inputStream, StandardCharsets.UTF_8)
         val usernamePasswordMap: MutableMap<String, String>? = objectMapper.readValue(
             messageBody,
