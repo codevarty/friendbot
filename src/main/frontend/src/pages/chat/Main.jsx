@@ -47,9 +47,9 @@ const Main = () => {
             {/* 사용자 질문 및 GPT 응답 부분 */}
             <MessageContainer chatList={chat}/>
             {/* 사용자 프롬프트 입력 부분 */}
-            <SearchBar prompt={prompt}
-                       setPrompt={setPrompt}
-                       onClick={sendMessage}/>
+            {/*<SearchBar prompt={prompt}*/}
+            {/*           setPrompt={setPrompt}*/}
+            {/*           onClick={sendMessage}/>*/}
         </div>
     )
 }

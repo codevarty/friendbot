@@ -6,8 +6,9 @@ export default defineConfig({
     plugins: [react()],
     server: {
         '/api': {
-            target: 'http://localhost:8090', // Spring Boot application url
+            target: 'http://127.0.0.1:8090', // Spring Boot application url
             changeOrigin: true,
+            secure: false,
         }
     }
 })

@@ -1,4 +1,3 @@
-import Form from 'react-bootstrap/Form';
 import classes from '../../style/chat/Header.module.css'
 import LightDarkToggleButton from "../../component/button/LightDarkToggleButton.jsx";
 
@@ -8,10 +7,9 @@ const ChatHeader = ({setType}) => {
     return (
         <div className={classes.root}>
             <header className='flex-between'>
-                <Form.Select
-                    bsPrefix={classes.select} // Custom Select
-                    size="lg"
-                    aria-label="select model type"
+                <select
+                    className="border border-gray-200 rounded-lg"
+                    // Custom Select
                     onChange={event => {
                         setType(event.target.value)
                     }}
@@ -20,7 +18,7 @@ const ChatHeader = ({setType}) => {
                     <option value="counselor">심리 상담사</option>
                     <option value="teacher">진로 멘토</option>
                     <option value="friendr">친구</option>
-                </Form.Select>
+                </select>
 
                 <LightDarkToggleButton/>
             </header>

@@ -32,10 +32,10 @@ class SecurityConfig(
 
     ) {
 
+    private val allowPatterns = arrayOf("/", "/api/user/signup")
+
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
-
-    private val allowPatterns = arrayOf("/", "/api/user/signup")
 
     @Bean
     fun authenticationManager(): AuthenticationManager {
@@ -69,8 +69,8 @@ class SecurityConfig(
         http
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers(*allowPatterns).permitAll()
-                    .anyRequest().authenticated()// 테스트를 위해 모두 허용
+                    .requestMatchers(*allowPatterns).permitAll() // 해당 URL 허용
+                    .anyRequest().authenticated() // 인증된 경우 사용가능
             }
 
         // 세션을 사용하지 않으므로 STATELESS 설정
