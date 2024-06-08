@@ -1,17 +1,14 @@
-import classes from '../../style/chat/messageContainer.module.css';
-
+import React from "react";
 
 // eslint-disable-next-line react/prop-types
 const MessageContainer = ({chatList}) => {
 
     return (
-        <div className={classes.container}>
+        <div>
             {/* eslint-disable-next-line react/prop-types */}
             {chatList !== null && chatList.map((chat, index) => (
-                <div key={index} className={classes.messageContainer}>
+                <div key={index}>
                     <div
-                        className={`${classes.message} 
-                        ${chat.type === "user" ? classes.userMessage : classes.botMessage}`}
                     >
                         {chat.content}
                     </div>

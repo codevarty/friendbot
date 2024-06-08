@@ -1,6 +1,4 @@
 import {useEffect, useState} from "react";
-import classes from "../../style/chat/Main.module.css";
-import SearchBar from "../../component/chat/SearchBar.jsx";
 import axios from "axios";
 import ChatHeader from "./ChatHeader.jsx";
 import MessageContainer from "./MessageContainer.jsx";
@@ -41,7 +39,7 @@ const Main = () => {
             .catch(err => console.log(err))
     }
     return (
-        <div className={classes.root}>
+        <div>
             {/* 헤더 부분 */}
             <ChatHeader setType={setType}/>
             {/* 사용자 질문 및 GPT 응답 부분 */}

@@ -5,9 +5,3 @@ html {
     margin: 0;
     box-sizing: border-box;
 }
-
-
-.flex-between {
-    display: flex;
-    justify-content: space-between;
-}

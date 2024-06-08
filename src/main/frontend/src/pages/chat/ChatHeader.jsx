@@ -1,11 +1,10 @@
-import classes from '../../style/chat/Header.module.css'
 import LightDarkToggleButton from "../../component/button/LightDarkToggleButton.jsx";
 
-// eslint-disable-next-line react/prop-types
+
 const ChatHeader = ({setType}) => {
 
     return (
-        <div className={classes.root}>
+        <div>
             <header className='flex-between'>
                 <select
                     className="border border-gray-200 rounded-lg"
