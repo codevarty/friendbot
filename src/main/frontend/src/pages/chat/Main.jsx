@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import ChatHeader from "./ChatHeader.jsx";
 import MessageContainer from "./MessageContainer.jsx";
+import SearchBar from "../../component/chat/SearchBar.jsx";
 
 const Main = () => {
 
@@ -33,21 +34,20 @@ const Main = () => {
                 }
                 let message = response.data.choices[0].message.content // GPT 응답 내용
                 setChat(current => [...current, {type: "bot", content: message}])
-                console.log(message);
                 // getSpeech(message);
             })
             .catch(err => console.log(err))
     }
     return (
-        <div>
+        <div className="grow p-8 flex flex-col justify-between">
             {/* 헤더 부분 */}
             <ChatHeader setType={setType}/>
             {/* 사용자 질문 및 GPT 응답 부분 */}
             <MessageContainer chatList={chat}/>
             {/* 사용자 프롬프트 입력 부분 */}
-            {/*<SearchBar prompt={prompt}*/}
-            {/*           setPrompt={setPrompt}*/}
-            {/*           onClick={sendMessage}/>*/}
+            <SearchBar prompt={prompt}
+                       setPrompt={setPrompt}
+                       onClick={sendMessage}/>
         </div>
     )
 }

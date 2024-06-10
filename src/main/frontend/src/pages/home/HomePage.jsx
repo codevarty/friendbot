@@ -6,7 +6,7 @@ const HomePage = () => {
 
 
     return (
-        <div className="flex">
+        <div className="w-screen flex">
             <Sidebar>
                 <hr className="my-3" />
                 <SidebarItem icon={<svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"

@@ -16,9 +16,15 @@
     font-style: normal;
 }
 
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    display: flex;
     background: var(--theme-background-light);
     color: var(--theme-color);
     place-items: center;

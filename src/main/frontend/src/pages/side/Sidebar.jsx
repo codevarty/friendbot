@@ -1,5 +1,6 @@
 import logo from '../../assets/logo.webp'
 
+// eslint-disable-next-line react/prop-types
 export default function Sidebar({children}) {
     return (
         <aside className="h-screen">
@@ -28,7 +29,8 @@ export default function Sidebar({children}) {
 }
 
 // 사이드바 아이템
-export function SidebarItem({icon, text, active, alert}) {
+// eslint-disable-next-line react/prop-types
+export function SidebarItem({icon, text, active}) {
     return (
         <li className={`p-2 rounded-md flex justify-between items-center
         border border-gray-200 ${active ? "bg-gray-200" : "hover:bg-gray-100"}`}>
