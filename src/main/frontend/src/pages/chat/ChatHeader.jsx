@@ -4,8 +4,8 @@ import LightDarkToggleButton from "../../component/button/LightDarkToggleButton.
 const ChatHeader = ({setType}) => {
 
     return (
-        <div>
-            <header className='flex-between'>
+        <div className="flex-between items-center">
+            <header>
                 <select
                     className="border border-gray-200 rounded-lg"
                     // Custom Select

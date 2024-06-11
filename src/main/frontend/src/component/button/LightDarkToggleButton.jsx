@@ -1,22 +1,19 @@
-import {useContext, useEffect} from "react";
-import {ThemeContext} from "../context/ThemeProvider.jsx";
-import {GoSun} from "react-icons/go";
-import {RiMoonFill} from "react-icons/ri";
+import {useEffect} from "react";
+import useTheme from "../hooks/useTheme.jsx";
 
 const LightDarkToggleButton = () => {
-    const {theme, onChangeTheme} = useContext(ThemeContext);
+    const {theme, onChangeTheme} = useTheme();
 
     useEffect(() => {
-        document.body.className = theme === 'light' ? '' : 'night';
+        if (theme === 'light') {
+            document.documentElement.classList.remove('dark')
+        } else {
+            document.documentElement.classList.add('dark')
+        }
     }, [theme]);
     return (
-        <div>
-            <input type="checkbox" id="toggle" onClick={onChangeTheme}/>
-            <label htmlFor="toggle">
-                <GoSun/>
-                <RiMoonFill />
-                <span></span>
-            </label>
+        <div className="relative text-dark dark:text-gray-400">
+            <button id="toggle" onClick={onChangeTheme}>임시 버튼</button>
         </div>
     );
 }

@@ -4,7 +4,7 @@ import logo from '../../assets/logo.webp'
 export default function Sidebar({children}) {
     return (
         <aside className="h-screen">
-            <nav className="h-full flex flex-col bg-white border-r shadow-sm">
+            <nav className="h-full flex flex-col bg-white border-r shadow-sm dark:bg-gray-800 dark:border-gray-500">
                 <div className="p-4 pb-2 flex justify-center items-center">
                     <img src={logo} alt="logo" className="w-24 rounded-md shadow-lg" />
                 </div>
