@@ -1,3 +1,4 @@
+import React from 'react';
 // eslint-disable-next-line react/prop-types
 const SearchBar = ({prompt, setPrompt, onClick}) => {
 
@@ -14,7 +15,9 @@ const SearchBar = ({prompt, setPrompt, onClick}) => {
                        onChange={(e) => setPrompt(e.target.value)}
                 />
                 <button
-                    className="absolute end-2.5 bottom-2 rounded-[50%] align-items-center p-3 bg-gray-900 text-white"
+                    disabled={!prompt}
+                    className={`absolute end-2.5 bottom-2 rounded-[50%] align-items-center p-3 text-white
+                               ${!prompt ? 'disabled disabled:bg-gray-300 dark:disabled:bg-gray-500' : 'bg-gray-900'} hover:bg-gray-500`}
                     onClick={onClick}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth="2"
                          stroke="currentColor" className="size-3.5">

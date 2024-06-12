@@ -1,6 +1,5 @@
 package project.friendbot.global.jwt.service
 
-import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import project.friendbot.domain.user.repository.UserRepository
+import java.nio.charset.StandardCharsets
 import java.util.*
 import javax.crypto.SecretKey
 
@@ -49,8 +49,9 @@ class JwtService(private val userRepository: UserRepository) {
     @PostConstruct
     fun init() {
         // Base64로 인코딩
-        val encodeKey = Base64.getEncoder().encodeToString(secretKey.toByteArray())
-        key = Keys.hmacShaKeyFor(encodeKey.toByteArray())
+        val encodeKey = Base64.getEncoder().encodeToString(secretKey.toByteArray(StandardCharsets.UTF_8))
+        log.info("Encoded key: $encodeKey")
+        key = Keys.hmacShaKeyFor(encodeKey.toByteArray(StandardCharsets.UTF_8))
     }
 
     /**

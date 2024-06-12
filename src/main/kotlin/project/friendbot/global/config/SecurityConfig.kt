@@ -32,7 +32,7 @@ class SecurityConfig(
 
     ) {
 
-    private val allowPatterns = arrayOf("/", "/api/user/signup")
+    private val allowPatterns = arrayOf("/", "/index.html", "/assets/**", "/api/user/signup")
 
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()

@@ -1,8 +1,9 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import ChatHeader from "./ChatHeader.jsx";
 import MessageContainer from "./MessageContainer.jsx";
 import SearchBar from "../../component/chat/SearchBar.jsx";
+
 
 const Main = () => {
 
@@ -16,6 +17,9 @@ const Main = () => {
     }, []);
 
     const sendMessage = () => {// 프롬프트 초기화
+        if (prompt.length === 0) {
+            return;
+        }
 
         setChat(current => [...current, {type: "user", content: prompt}])
         setPrompt(''); // 입력값 초기화

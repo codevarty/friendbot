@@ -1,3 +1,4 @@
+import React from 'react';
 import "../../style/button/button.css"
 import microphone from "../../assets/microphone.png"
 import audioStop from '../../assets/stop-media.png';

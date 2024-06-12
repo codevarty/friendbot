@@ -1,6 +1,7 @@
 package project.friendbot.domain.user.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 
 
@@ -32,6 +33,7 @@ class User(
     var birthdate: LocalDateTime = birthdate
         protected set
 
+    @Column(updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 
     fun updateToken(token: String) {

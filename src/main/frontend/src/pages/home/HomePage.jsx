@@ -1,3 +1,4 @@
+import React from "react";
 import Main from "../chat/Main.jsx";
 import Sidebar, {SidebarItem} from "../side/Sidebar.jsx";
 
@@ -8,7 +9,7 @@ const HomePage = () => {
     return (
         <div className="w-screen flex dark:bg-gray-800">
             <Sidebar>
-                <hr className="my-3" />
+                <hr className="my-3 dark:border-gray-400" />
                 <SidebarItem icon={<svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                         viewBox="0 0 24 24">
