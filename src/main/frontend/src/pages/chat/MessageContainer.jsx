@@ -5,7 +5,7 @@ import Message from "../../component/chat/Message.jsx";
 const MessageContainer = ({chatList}) => {
 
     return (
-        <ul className="list-none my-4 p-2.5 w-full overflow-y-auto">
+        <ul className="block list-none my-4 p-2.5 w-full max-h-[560px] overflow-y-auto">
             {/* eslint-disable-next-line react/prop-types */}
             {chatList !== null && chatList.map((chat, index) => (
                 <Message

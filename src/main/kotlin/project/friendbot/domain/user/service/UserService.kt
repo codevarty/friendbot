@@ -17,6 +17,7 @@ class UserService(
 
     @Transactional
     fun createUser(signUpUserRequest: SignUpUserRequest): Long {
+        println("회원 가입: $signUpUserRequest")
         if (userRepository.findByEmail(signUpUserRequest.email).isPresent) {
             throw Error("이메일이 중복되었습니다.")
         }

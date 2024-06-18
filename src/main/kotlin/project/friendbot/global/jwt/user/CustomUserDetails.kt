@@ -14,7 +14,7 @@ class CustomUserDetails(private val user: User) : UserDetails {
 
     override fun getPassword(): String = user.password
 
-    override fun getUsername(): String = user.email
+    override fun getUsername(): String = user.name
 
     override fun isAccountNonExpired(): Boolean = true
 

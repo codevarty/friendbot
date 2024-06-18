@@ -8,6 +8,6 @@ class HomeController {
 
     @GetMapping("/")
     fun home(): String {
-        return "index.html"
+        return "forward:index.html"
     }
 }

@@ -34,7 +34,7 @@ const Audio = ({setAnswer}) => {
             const formData = new FormData();
             formData.append("file", audioBlob, "audio-recording.wav");
 
-            axios.post("http://localhost:8090/api/chatGpt/question", formData)
+            axios.post("/api/chatGpt/question", formData)
                 .then((resp) => {
                     const txt = resp.data.choices[0].message.content;
                     setAnswer(txt);

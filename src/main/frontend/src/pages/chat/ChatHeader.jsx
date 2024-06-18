@@ -16,7 +16,7 @@ const ChatHeader = ({setType}) => {
                 <option value="speaker">영어 회화</option>
                 <option value="counselor">심리 상담사</option>
                 <option value="teacher">진로 멘토</option>
-                <option value="friendr">친구</option>
+                <option value="friend">친구</option>
             </select>
 
             <LightDarkToggleButton/>

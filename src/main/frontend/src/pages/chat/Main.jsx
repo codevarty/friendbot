@@ -6,7 +6,7 @@ import SearchBar from "../../component/chat/SearchBar.jsx";
 
 
 const Main = () => {
-
+    const accessToken = localStorage.getItem("accessToken");
     const [prompt, setPrompt] = useState('');
     const [type, setType] = useState('speaker');
     const [chat, setChat] = useState([]);
@@ -31,7 +31,12 @@ const Main = () => {
         console.log("request data", data)
         // axios 를 통해 서버 컨트롤러와 통신을 한다.
         // 서버 url 관리 할 수 있도록 한다.
-        axios.post("http://localhost:8090/api/chatGpt/prompt", data)
+        axios.post("http://localhost:8090/api/chatGpt/prompt", data, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
             .then(response => {
                 if (response.status !== 200) {
                     throw Error("잘못된 응답입니다.")
@@ -49,9 +54,12 @@ const Main = () => {
             {/* 사용자 질문 및 GPT 응답 부분 */}
             <MessageContainer chatList={chat}/>
             {/* 사용자 프롬프트 입력 부분 */}
-            <SearchBar prompt={prompt}
-                       setPrompt={setPrompt}
-                       onClick={sendMessage}/>
+            <SearchBar
+                prompt={prompt}
+                setPrompt={setPrompt}
+                promptHandler={sendMessage}
+                audioHandler={() => alert("audio clicked!")}
+            />
         </div>
     )
 }

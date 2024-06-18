@@ -1,7 +1,7 @@
 package project.friendbot.domain.user.entity
 
 import jakarta.persistence.*
-import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 
@@ -12,7 +12,7 @@ class User(
     val email: String,
     name: String,
     password: String,
-    birthdate: LocalDateTime,
+    birthdate: LocalDate,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ class User(
         protected set
 
     @Column(nullable = false)
-    var birthdate: LocalDateTime = birthdate
+    var birthdate: LocalDate = birthdate
         protected set
 
     @Column(updatable = false)
@@ -40,7 +40,7 @@ class User(
         this.refreshToken = token
     }
 
-    fun updateUserInfo(name: String, birthdate: LocalDateTime) {
+    fun updateUserInfo(name: String, birthdate: LocalDate) {
         this.name = name
         this.birthdate = birthdate
     }
