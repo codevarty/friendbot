@@ -10,11 +10,13 @@ const Main = () => {
     const [prompt, setPrompt] = useState('');
     const [type, setType] = useState('speaker');
     const [chat, setChat] = useState([]);
+    const [answer, setAnswer] = useState('');
 
-    // //음성 변환 목소리 preload
     useEffect(() => {
-        window.speechSynthesis.getVoices(); // 딜레이를 줄이기 위해 사용
-    }, []);
+        if (answer.trim().length > 0) {
+            alert(answer)
+        }
+    }, [answer])
 
     const sendMessage = () => {// 프롬프트 초기화
         if (prompt.length === 0) {
@@ -28,7 +30,7 @@ const Main = () => {
             type: type,
             content: prompt,
         }
-        console.log("request data", data)
+        
         // axios 를 통해 서버 컨트롤러와 통신을 한다.
         // 서버 url 관리 할 수 있도록 한다.
         axios.post("http://localhost:8090/api/chatGpt/prompt", data, {
@@ -43,7 +45,6 @@ const Main = () => {
                 }
                 let message = response.data.choices[0].message.content // GPT 응답 내용
                 setChat(current => [...current, {type: "bot", content: message}])
-                // getSpeech(message);
             })
             .catch(err => console.log(err))
     }
@@ -57,8 +58,9 @@ const Main = () => {
             <SearchBar
                 prompt={prompt}
                 setPrompt={setPrompt}
+                type={type}
+                setAnswer={setAnswer}
                 promptHandler={sendMessage}
-                audioHandler={() => alert("audio clicked!")}
             />
         </div>
     )
