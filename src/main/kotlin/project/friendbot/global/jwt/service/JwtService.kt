@@ -1,6 +1,7 @@
 package project.friendbot.global.jwt.service
 
 import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
@@ -60,11 +61,11 @@ class JwtService(private val userRepository: UserRepository) {
     fun generateAccessToken(email: String): String {
         val now = Date()
         return Jwts.builder()
-            .subject(ACCESS_TOKEN_SUBJECT)
-            .expiration(Date(now.time + accessTokenExpiration.toLong()))
-            .claim("email", email)
-            .signWith(key)
-            .compact()
+                .subject(ACCESS_TOKEN_SUBJECT)
+                .expiration(Date(now.time + accessTokenExpiration.toLong()))
+                .claim("email", email)
+                .signWith(key)
+                .compact()
     }
 
     /**
@@ -73,10 +74,10 @@ class JwtService(private val userRepository: UserRepository) {
     fun generateRefreshToken(): String {
         val now = Date()
         return Jwts.builder()
-            .subject(REFRESH_TOKEN_SUBJECT)
-            .expiration(Date(now.time + refreshTokenExpiration.toLong()))
-            .signWith(key)
-            .compact()
+                .subject(REFRESH_TOKEN_SUBJECT)
+                .expiration(Date(now.time + refreshTokenExpiration.toLong()))
+                .signWith(key)
+                .compact()
     }
 
     /**
@@ -101,7 +102,7 @@ class JwtService(private val userRepository: UserRepository) {
      */
     fun getRefreshToken(email: String): String {
         val user = userRepository.findByEmail(email)
-            .orElseThrow { Error("사용자를 찾을 수 없습니다.") }
+                .orElseThrow { Error("사용자를 찾을 수 없습니다.") }
         return user.refreshToken!!
     }
 
@@ -110,7 +111,7 @@ class JwtService(private val userRepository: UserRepository) {
      */
     fun updateRefreshToken(email: String, refreshToken: String) {
         val user = userRepository.findByEmail(email)
-            .orElseThrow { Error("사용자를  찾을 수 없습니다,") }
+                .orElseThrow { Error("사용자를  찾을 수 없습니다,") }
 
         user.updateToken(refreshToken)
         userRepository.save(user)
@@ -121,8 +122,8 @@ class JwtService(private val userRepository: UserRepository) {
      */
     fun extractRefreshToken(request: HttpServletRequest): Optional<String> {
         return Optional.ofNullable(request.getHeader(refreshTokenHeader))
-            .filter { it.startsWith(BEARER) }
-            .map { it.replace(BEARER, "") }
+                .filter { it.startsWith(BEARER) }
+                .map { it.replace(BEARER, "") }
     }
 
     /**
@@ -130,16 +131,16 @@ class JwtService(private val userRepository: UserRepository) {
      */
     fun extractAccessToken(request: HttpServletRequest): Optional<String> {
         return Optional.ofNullable(request.getHeader(accessTokenHeader))
-            .filter { it.startsWith(BEARER) }
-            .map { it.replace(BEARER, "") }
+                .filter { it.startsWith(BEARER) }
+                .map { it.replace(BEARER, "") }
     }
 
     fun extractEmail(token: String): Optional<String> {
         try {
             val claims = Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
             return Optional.ofNullable(claims.payload.get("email", String::class.java))
         } catch (e: Exception) {
             return Optional.empty()
@@ -155,15 +156,17 @@ class JwtService(private val userRepository: UserRepository) {
             return true
         } catch (e: MalformedJwtException) {
             log.error("Invalid JWT token: {}", e.message)
+            throw JwtException("InvalidToken")
         } catch (e: ExpiredJwtException) {
             log.error("JWT token is expired: {}", e.message)
+            throw JwtException("ExpiredToken")
         } catch (e: UnsupportedJwtException) {
             log.error("JWT token is unsupported: {}", e.message)
+            throw JwtException("UnsupportedToken")
         } catch (e: IllegalArgumentException) {
             log.error("JWT claims string is empty: {}", e.message)
+            throw JwtException("EmptyClaims")
         }
-
-        return false
     }
 
     fun isRefreshTokenValid(token: String): Boolean {

@@ -1,5 +1,8 @@
 package project.friendbot.domain.exception
 
+import io.jsonwebtoken.JwtException
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -12,8 +15,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(CustomException::class)
     fun handleCustomException(e: CustomException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
-            e.exceptionCode.status.value(),
-            e.exceptionCode.message,
+                e.exceptionCode.status.value(),
+                e.exceptionCode.message,
         )
         return ResponseEntity(errorResponse, e.exceptionCode.status)
     }

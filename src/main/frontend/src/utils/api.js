@@ -32,19 +32,34 @@ api.interceptors.response.use(
         return response;
     },
     async (error) => {
-        if (error.response?.status === 401) {
+        const {config, response: {status, data}} = error
+        if (status === 401 && data.message === "InvalidToken") {
+            logout()
+        }
 
-            const accessToken = localStorage.getItem("accessToken");
-
-            error.config.headers = {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
+        if (status === 401 && data.message === "ExpiredToken") {
+            try {
+                const tokenRefreshResult = await api.post('/refresh-token');
+                if (tokenRefreshResult.status === 200) {
+                    // 아래 부분 수정이 필요하다.
+                    const {accessToken, refreshToken} = tokenRefreshResult.data
+                    // 새로 발급받은 토큰을 스토리지에 저장
+                    localStorage.setItem('accessToken', accessToken);
+                    localStorage.setItem('refreshToken', refreshToken);
+                    // 토큰 갱신 성공. API 재요청
+                    return api(config)
+                } else {
+                    logout();
+                }
+            } catch (e) {
+                logout();
             }
-
-            // 중단된 요청을(에러난 요청)을 토큰 갱신 후 재요청
-            return await axios.request(error.config);
         }
 
         return Promise.reject(error);
     }
 )
+
+function logout() {
+    localStorage.clear()
+}
