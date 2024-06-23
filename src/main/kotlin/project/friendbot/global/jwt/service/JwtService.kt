@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import project.friendbot.domain.user.repository.UserRepository
 import java.nio.charset.StandardCharsets
@@ -61,11 +62,11 @@ class JwtService(private val userRepository: UserRepository) {
     fun generateAccessToken(email: String): String {
         val now = Date()
         return Jwts.builder()
-                .subject(ACCESS_TOKEN_SUBJECT)
-                .expiration(Date(now.time + accessTokenExpiration.toLong()))
-                .claim("email", email)
-                .signWith(key)
-                .compact()
+            .subject(ACCESS_TOKEN_SUBJECT)
+            .expiration(Date(now.time + accessTokenExpiration.toLong()))
+            .claim("email", email)
+            .signWith(key)
+            .compact()
     }
 
     /**
@@ -74,10 +75,10 @@ class JwtService(private val userRepository: UserRepository) {
     fun generateRefreshToken(): String {
         val now = Date()
         return Jwts.builder()
-                .subject(REFRESH_TOKEN_SUBJECT)
-                .expiration(Date(now.time + refreshTokenExpiration.toLong()))
-                .signWith(key)
-                .compact()
+            .subject(REFRESH_TOKEN_SUBJECT)
+            .expiration(Date(now.time + refreshTokenExpiration.toLong()))
+            .signWith(key)
+            .compact()
     }
 
     /**
@@ -102,7 +103,7 @@ class JwtService(private val userRepository: UserRepository) {
      */
     fun getRefreshToken(email: String): String {
         val user = userRepository.findByEmail(email)
-                .orElseThrow { Error("사용자를 찾을 수 없습니다.") }
+            .orElseThrow { Error("사용자를 찾을 수 없습니다.") }
         return user.refreshToken!!
     }
 
@@ -111,7 +112,7 @@ class JwtService(private val userRepository: UserRepository) {
      */
     fun updateRefreshToken(email: String, refreshToken: String) {
         val user = userRepository.findByEmail(email)
-                .orElseThrow { Error("사용자를  찾을 수 없습니다,") }
+            .orElseThrow { Error("사용자를  찾을 수 없습니다,") }
 
         user.updateToken(refreshToken)
         userRepository.save(user)
@@ -122,8 +123,8 @@ class JwtService(private val userRepository: UserRepository) {
      */
     fun extractRefreshToken(request: HttpServletRequest): Optional<String> {
         return Optional.ofNullable(request.getHeader(refreshTokenHeader))
-                .filter { it.startsWith(BEARER) }
-                .map { it.replace(BEARER, "") }
+            .filter { it.startsWith(BEARER) }
+            .map { it.replace(BEARER, "") }
     }
 
     /**
@@ -131,16 +132,16 @@ class JwtService(private val userRepository: UserRepository) {
      */
     fun extractAccessToken(request: HttpServletRequest): Optional<String> {
         return Optional.ofNullable(request.getHeader(accessTokenHeader))
-                .filter { it.startsWith(BEARER) }
-                .map { it.replace(BEARER, "") }
+            .filter { it.startsWith(BEARER) }
+            .map { it.replace(BEARER, "") }
     }
 
     fun extractEmail(token: String): Optional<String> {
         try {
             val claims = Jwts.parser()
-                    .verifyWith(key)
-                    .build()
-                    .parseSignedClaims(token)
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
             return Optional.ofNullable(claims.payload.get("email", String::class.java))
         } catch (e: Exception) {
             return Optional.empty()
@@ -169,16 +170,14 @@ class JwtService(private val userRepository: UserRepository) {
         }
     }
 
-    fun isRefreshTokenValid(token: String): Boolean {
-        if (isTokenValid(token)) {
-            return true
-        }
+    fun logout(refreshToken: String) {
+        val user = userRepository
+            .findByRefreshToken(refreshToken)
+            .orElseThrow { error("user not found") }
 
-        // 토큰이 같은지 검사를 한다.
-        val findByRefreshToken = userRepository.findByRefreshToken(token)
+        user.updateToken(null)
 
-        return !findByRefreshToken.isEmpty
+        SecurityContextHolder.getContext().authentication = null
+        userRepository.save(user)
     }
-
-
 }

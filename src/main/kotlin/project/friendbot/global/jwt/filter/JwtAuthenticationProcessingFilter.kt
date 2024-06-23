@@ -25,7 +25,7 @@ class JwtAuthenticationProcessingFilter(
 ) : OncePerRequestFilter() {
 
     companion object {
-        private const val NO_CHECK_URL = "/api/user/login"
+        private val NO_CHECK_URLS = listOf("/api/user/login", "/api/logout")
     }
 
     private val authoritiesMapper = NullAuthoritiesMapper()
@@ -39,7 +39,7 @@ class JwtAuthenticationProcessingFilter(
         filterChain: FilterChain
     ) {
         try {
-            if (request.requestURI == NO_CHECK_URL) {
+            if (NO_CHECK_URLS.contains(request.requestURI)) {
                 filterChain.doFilter(request, response) // /login 호출이 들어오면 다음 필터 호출
                 return
             }

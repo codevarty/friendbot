@@ -36,7 +36,7 @@ class User(
     @Column(updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 
-    fun updateToken(token: String) {
+    fun updateToken(token: String?) {
         this.refreshToken = token
     }
 
