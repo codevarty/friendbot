@@ -33,7 +33,10 @@ class SecurityConfig(
     ) {
 
     // 접근 권한 허용 URI
-    private val allowPatterns = arrayOf("/", "/index.html", "/assets/**", "/*.svg", "/api/user/signup")
+    private val allowPatterns = arrayOf(
+        "/", "/index.html", "/assets/**", "/*.svg",
+        "/api/user/signup", "/api/refresh-token"
+    )
 
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()

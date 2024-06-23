@@ -30,10 +30,10 @@ const Main = () => {
             type: type,
             content: prompt,
         }
-        
+
         // axios 를 통해 서버 컨트롤러와 통신을 한다.
         // 서버 url 관리 할 수 있도록 한다.
-        axios.post("http://localhost:8090/api/chatGpt/prompt", data, {
+        axios.post("/api/chatGpt/prompt", data, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${accessToken}`

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Main from "../chat/Main.jsx";
 import Sidebar, {SidebarItem} from "../side/Sidebar.jsx";
-import axios from "axios";
+import api from "../../utils/api.js";
 
 
 const HomePage = () => {
@@ -10,9 +10,9 @@ const HomePage = () => {
 
     const getUsernameHandler = async () => {
         try {
-            const response = await axios.get("/api/user/username", {
+            const response = await api.get("/api/user/username", {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    "Content-Type": "application/json"
                 }
             })
             if (response.status === 200) {

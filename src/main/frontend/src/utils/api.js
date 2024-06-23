@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "/api",
     timeout: 1000, // 통신이 오래 걸리면 통신 종료
 })
+
+export default api;
 
 api.interceptors.request.use(
     (config) => {
@@ -15,7 +16,6 @@ api.interceptors.request.use(
             return config;
         }
 
-        config.headers['Content-Type'] = 'application/json';
         config.headers['Authorization'] = `Bearer ${accessToken}`;
         return config;
     },
@@ -33,16 +33,27 @@ api.interceptors.response.use(
     },
     async (error) => {
         const {config, response: {status, data}} = error
-        if (status === 401 && data.message === "InvalidToken") {
+        if (status === 401 && data === "InvalidToken") {
             logout()
         }
 
-        if (status === 401 && data.message === "ExpiredToken") {
+        if (status === 401 && data === "ExpiredToken") {
             try {
-                const tokenRefreshResult = await api.post('/refresh-token');
+                const tokenRefreshResult = await api.post('/api/refresh-token', null, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization-refresh': `Bearer ${localStorage.getItem('refreshToken')}`
+                    }
+                });
                 if (tokenRefreshResult.status === 200) {
                     // 아래 부분 수정이 필요하다.
-                    const {accessToken, refreshToken} = tokenRefreshResult.data
+                    const accessToken = tokenRefreshResult.headers.get('Authorization');
+                    const refreshToken = tokenRefreshResult.headers.get('Authorization-refresh');
+
+                    if (!accessToken || !refreshToken) {
+                        logout();
+                        return
+                    }
                     // 새로 발급받은 토큰을 스토리지에 저장
                     localStorage.setItem('accessToken', accessToken);
                     localStorage.setItem('refreshToken', refreshToken);

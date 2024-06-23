@@ -19,9 +19,9 @@ import project.friendbot.global.jwt.user.service.CustomUserDetailService
 import java.io.IOException
 
 class JwtAuthenticationProcessingFilter(
-        private val jwtService: JwtService,
-        private val userRepository: UserRepository,
-        private val customUserDetailService: CustomUserDetailService
+    private val jwtService: JwtService,
+    private val userRepository: UserRepository,
+    private val customUserDetailService: CustomUserDetailService
 ) : OncePerRequestFilter() {
 
     companion object {
@@ -34,9 +34,9 @@ class JwtAuthenticationProcessingFilter(
 
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
-            request: HttpServletRequest,
-            response: HttpServletResponse,
-            filterChain: FilterChain
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain
     ) {
         try {
             if (request.requestURI == NO_CHECK_URL) {
@@ -45,12 +45,14 @@ class JwtAuthenticationProcessingFilter(
             }
             // 사용자 요청에서 refresh token 추출
             val refreshToken = jwtService.extractRefreshToken(request)
-                    .filter(jwtService::isTokenValid)
-                    .orElse(null)
+                .filter(jwtService::isTokenValid)
+                .orElse(null)
 
             // 1. refresh token 이 있는 경우
             if (refreshToken != null) {
                 checkRefreshTokenAndReIssueAccessToken(response, refreshToken)
+                println(refreshToken)
+                filterChain.doFilter(request, response) // 재발급을 위해 다음 필터 이동
             }
 
             // 2. refresh token 이 없는 경우
@@ -66,16 +68,16 @@ class JwtAuthenticationProcessingFilter(
 
     private fun checkRefreshTokenAndReIssueAccessToken(response: HttpServletResponse, refreshToken: String) {
         userRepository.findByRefreshToken(refreshToken)
-                .ifPresent { user ->
-                    run {
-                        val reIssuedRefreshToken = reIssueRefreshToken(user)
-                        jwtService.sendAccessAndRefreshToken(
-                                response,
-                                jwtService.generateAccessToken(user.email),
-                                reIssuedRefreshToken
-                        )
-                    }
+            .ifPresent { user ->
+                run {
+                    val reIssuedRefreshToken = reIssueRefreshToken(user)
+                    jwtService.sendAccessAndRefreshToken(
+                        response,
+                        jwtService.generateAccessToken(user.email),
+                        reIssuedRefreshToken
+                    )
                 }
+            }
     }
 
     private fun reIssueRefreshToken(user: User): String {
@@ -87,27 +89,27 @@ class JwtAuthenticationProcessingFilter(
 
     @Throws(ServletException::class, IOException::class)
     fun checkAccessTokenAndAuthentication(
-            request: HttpServletRequest?, response: HttpServletResponse?,
-            filterChain: FilterChain
+        request: HttpServletRequest?, response: HttpServletResponse?,
+        filterChain: FilterChain
     ) {
         jwtService.extractAccessToken(request!!)
-                .filter(jwtService::isTokenValid)
-                .ifPresent { accessToken ->
-                    jwtService.extractEmail(accessToken)
-                            .ifPresent { email ->
-                                userRepository.findByEmail(email)
-                                        .ifPresent { myUser: User? -> this.saveAuthentication(myUser!!) }
-                            }
-                }
+            .filter(jwtService::isTokenValid)
+            .ifPresent { accessToken ->
+                jwtService.extractEmail(accessToken)
+                    .ifPresent { email ->
+                        userRepository.findByEmail(email)
+                            .ifPresent { myUser: User? -> this.saveAuthentication(myUser!!) }
+                    }
+            }
         filterChain.doFilter(request, response)
     }
 
     private fun saveAuthentication(user: User) {
         val customUserDetails = customUserDetailService.loadUserByUsername(user.email)
         val authentication = UsernamePasswordAuthenticationToken(
-                customUserDetails,
-                null,
-                authoritiesMapper.mapAuthorities(customUserDetails.authorities)
+            customUserDetails,
+            null,
+            authoritiesMapper.mapAuthorities(customUserDetails.authorities)
         )
 
         SecurityContextHolder.getContext().authentication = authentication
