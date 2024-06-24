@@ -1,27 +1,22 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import ChatHeader from "./ChatHeader.jsx";
 import MessageContainer from "./MessageContainer.jsx";
 import SearchBar from "../../component/chat/SearchBar.jsx";
+import sendMessage from "../../utils/message.js";
 
 
 const Main = () => {
-    const accessToken = localStorage.getItem("accessToken");
     const [prompt, setPrompt] = useState('');
     const [type, setType] = useState('speaker');
     const [chat, setChat] = useState([]);
-    const [answer, setAnswer] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        if (answer.trim().length > 0) {
-            alert(answer)
-        }
-    }, [answer])
-
-    const sendMessage = () => {// 프롬프트 초기화
+    const promptHandler = async () => {// 프롬프트 초기화
         if (prompt.length === 0) {
             return;
         }
+
+        setLoading(true);
 
         setChat(current => [...current, {type: "user", content: prompt}])
         setPrompt(''); // 입력값 초기화
@@ -31,22 +26,15 @@ const Main = () => {
             content: prompt,
         }
 
-        // axios 를 통해 서버 컨트롤러와 통신을 한다.
-        // 서버 url 관리 할 수 있도록 한다.
-        axios.post("/api/chatGpt/prompt", data, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-            .then(response => {
-                if (response.status !== 200) {
-                    throw Error("잘못된 응답입니다.")
-                }
-                let message = response.data.choices[0].message.content // GPT 응답 내용
-                setChat(current => [...current, {type: "bot", content: message}])
-            })
-            .catch(err => console.log(err))
+        try {
+            const message = await sendMessage(data);
+
+            setChat(current => [...current, {type: "bot", content: message}])
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
     }
     return (
         <div className="grow p-8 flex flex-col justify-between">
@@ -56,11 +44,12 @@ const Main = () => {
             <MessageContainer chatList={chat}/>
             {/* 사용자 프롬프트 입력 부분 */}
             <SearchBar
+                loading={loading}
                 prompt={prompt}
                 setPrompt={setPrompt}
                 type={type}
-                setAnswer={setAnswer}
-                promptHandler={sendMessage}
+                setChat={setChat}
+                promptHandler={promptHandler}
             />
         </div>
     )

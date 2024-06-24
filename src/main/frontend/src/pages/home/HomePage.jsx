@@ -25,7 +25,7 @@ const HomePage = () => {
     }
 
     useEffect(() => {
-        if (accessToken) {
+        if (accessToken && username.length === 0) {
             getUsernameHandler();
         }
     }, []);

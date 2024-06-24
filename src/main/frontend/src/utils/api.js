@@ -1,8 +1,6 @@
 import axios from "axios";
 
-const api = axios.create({
-    timeout: 1000, // 통신이 오래 걸리면 통신 종료
-})
+const api = axios.create()
 
 export default api;
 

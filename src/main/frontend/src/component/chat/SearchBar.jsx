@@ -1,14 +1,16 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
-import AudioButton from "../button/AudioButton.jsx";
+import AudioButton from "../button/AudioButton.jsx"
 // eslint-disable-next-line react/prop-types
-const SearchBar = ({prompt, setPrompt, type,  setAnswer, promptHandler}) => {
+const SearchBar = ({loading, prompt, setPrompt, type, setChat, promptHandler}) => {
 
 
     return (
         <div className="relative flex justify-center items-center p-2">
             <div className="relative max-w-3xl w-full">
-                <AudioButton type={type} setAnswer={setAnswer} />
+                {loading &&
+                    <div className="absolute w-full -top-6 text-center text-sm text-gray-400">Loading...</div>}
+                <AudioButton type={type} setChat={setChat}/>
                 <form>
                     <input type="text"
                            placeholder="Type a new message here"
