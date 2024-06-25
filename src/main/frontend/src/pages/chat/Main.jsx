@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import ChatHeader from "./ChatHeader.jsx";
 import MessageContainer from "./MessageContainer.jsx";
 import SearchBar from "../../component/chat/SearchBar.jsx";

@@ -9,7 +9,10 @@ const SearchBar = ({loading, prompt, setPrompt, type, setChat, promptHandler}) =
         <div className="relative flex justify-center items-center p-2">
             <div className="relative max-w-3xl w-full">
                 {loading &&
-                    <div className="absolute w-full -top-6 text-center text-sm text-gray-400">Loading...</div>}
+                    <div className="absolute w-full -top-6 text-center text-sm text-gray-400">
+                        friend bot 응답을 기다리는 중...
+                    </div>
+                }
                 <AudioButton type={type} setChat={setChat}/>
                 <form>
                     <input type="text"

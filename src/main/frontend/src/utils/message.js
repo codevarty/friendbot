@@ -8,8 +8,6 @@ const sendMessage = async (message) => {
         contentType = "multipart/form-data"
     }
 
-    console.log(message);
-
     try {
         const response = await api.post(baseUrl, message, {
             headers: {
@@ -18,7 +16,7 @@ const sendMessage = async (message) => {
         })
 
         if (response.status !== 200) {
-            throw Error("잘못되 응답입니다.")
+            Error("잘못되 응답입니다.")
         }
 
         return response.data.choices[0].message.content;
