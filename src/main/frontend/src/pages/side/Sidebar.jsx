@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import logo from '../../assets/logo.webp'
+import Avatar from "boring-avatars";
 import {Link, useNavigate} from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
@@ -17,8 +18,9 @@ export default function Sidebar({username, children}) {
                 {/* eslint-disable-next-line react/prop-types */}
                 {username.length > 0 ?
                     <div className="border-t dark:border-gray-400 flex p-3">
-                        <img src={`https://source.boringavatars.com/marble/500/${username}`} alt="profile"
-                             className="w-10 h-10 rounded-md"/>
+                        {/*<img src={`https://source.boringavatars.com/marble/500/${username}`} alt="profile"*/}
+                        {/*     className="w-10 h-10 rounded-md"/>*/}
+                        <Avatar name={username} variant="marble" size={50} className="w-10 h-10 rounded-md" />
                         <div className="ml-3 w-full flex justify-between items-center overflow-hidden">
                             <div className="leading-4">
                                 <h4 className="font-semibold dark:text-white">{username}</h4>
